@@ -130,25 +130,63 @@ const Tab2Nav4Screen = () => (
   </Detail>
 );
 
-function SafeAreaMaterialTopTabBar(props) {
+const HeaderLeftImage = props => (
+  <Image
+    source={require('./backImage.png')}
+    style={{height: 26, width: 26, marginLeft: 16, ...props.style}}
+  />
+);
+
+const HeaderLeft = ({navigation}) => (
+  <TouchableOpacity
+    onPress={() => {
+      navigation.goBack();
+    }}>
+    <HeaderLeftImage />
+  </TouchableOpacity>
+);
+
+const SafeAreaMaterialTopTabBar = props => {
   return (
     <SafeAreaView>
       <MaterialTopTabBar {...props} />
     </SafeAreaView>
   );
-}
+};
 
 const Tab2Nav2DetailsTopNavScreens = createMaterialTopTabNavigator(
   {
+    back: {
+      screen: () => null,
+      navigationOptions: ({navigation}) => {
+        return {
+          // tabBarComponent: <HeaderLeft navigation={navigation} />,
+
+          tabBarLabel: <HeaderLeftImage style={{marginLeft: 0}} />,
+          tabBarOnPress: () => navigation.navigate('TabScreen'),
+          // Below options not working... :(
+          // tabBarOptions: {
+          //   labelStyle: {
+          //     textAlign: 'left',
+          //   },
+          //   tabStyle: {
+          //     width: 50,
+          //   },
+          // },
+        };
+      },
+    },
     nav1: {screen: Tab2Nav2Nav1DetailScreen},
     nav2: {screen: Tab2Nav2Nav2DetailScreen},
   },
   {
     initialLayout: {
-      height: 0,
+      height: Dimensions.get('window').height,
       width: Dimensions.get('window').width,
     },
+    initialRouteName: 'nav1',
     swipeEnabled: true,
+    tabBarComponent: SafeAreaMaterialTopTabBar,
     tabBarOptions: {
       activeTintColor: 'black',
       inactiveTintColor: 'gray',
@@ -159,9 +197,11 @@ const Tab2Nav2DetailsTopNavScreens = createMaterialTopTabNavigator(
         borderBottomColor: 'brown',
         borderBottomWidth: 2,
       },
+      tabStyle: {
+        borderColor: 'red',
+      },
       style: {
         backgroundColor: 'white',
-        borderColor: 'orange',
       },
     },
   },
@@ -197,17 +237,55 @@ const TopTabScreens = createMaterialTopTabNavigator(
   },
 );
 
-const HeaderLeft = ({navigation}) => (
-  <TouchableOpacity
-    onPress={() => {
-      navigation.goBack();
-    }}>
-    <Image
-      source={require('./backImage.png')}
-      style={{height: 26, width: 26, marginLeft: 16}}
-    />
-  </TouchableOpacity>
-);
+// const HeaderTitle = ({navigation}) => {
+//   // console.warn(navigation.state);
+//   const {routeName} = navigation.state.routes[navigation.state.index];
+//   console.warn(routeName);
+
+//   return (
+//     <View
+//       style={{
+//         flexDirection: 'row',
+//       }}>
+//       <TouchableOpacity
+//         onPress={() => {
+//           navigation.navigate('nav1');
+//         }}
+//         style={{
+//           flex: 1,
+//           alignItems: 'center',
+//           paddingVertical: 12,
+//           borderBottomWidth: routeName === 'nav1' ? 2 : 0,
+//           borderColor: 'brown',
+//         }}>
+//         <Text
+//           style={{
+//             color: routeName === 'nav1' ? 'black' : 'gray',
+//           }}>
+//           Tab1
+//         </Text>
+//       </TouchableOpacity>
+//       <TouchableOpacity
+//         onPress={() => {
+//           navigation.navigate('nav2');
+//         }}
+//         style={{
+//           flex: 1,
+//           alignItems: 'center',
+//           paddingVertical: 12,
+//           borderBottomWidth: routeName === 'nav2' ? 2 : 0,
+//           borderColor: 'brown',
+//         }}>
+//         <Text
+//           style={{
+//             color: routeName === 'nav2' ? 'black' : 'gray',
+//           }}>
+//           Tab2
+//         </Text>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
 
 const Tab2Stack = createStackNavigator(
   {
@@ -221,8 +299,10 @@ const Tab2Stack = createStackNavigator(
       screen: Tab2Nav2DetailsTopNavScreens,
       navigationOptions: ({navigation}) => {
         return {
-          title: 'Title',
-          headerLeft: <HeaderLeft navigation={navigation} />,
+          header: null,
+          // headerLeft: <HeaderLeft navigation={navigation} />,
+          // headerTitle: <HeaderTitle navigation={navigation} />,
+          // headerRight: null,
         };
       },
     },
