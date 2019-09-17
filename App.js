@@ -54,7 +54,7 @@ const Tab2DetailScreen = ({navigation}) => (
     <Text>Tab2 > Nav2 > Nav1 > Detail > Detail Screen</Text>
     <Button
       title="Go to Next Screen"
-      onPress={() => navigation.navigate('Detail3')}
+      onPress={() => navigation.navigate('Tab2Nav2FinalDetailsScreen')}
     />
   </Detail>
 );
@@ -91,7 +91,7 @@ const Tab2Nav2Nav1DetailScreen = ({navigation}) => (
     <Text>Tab2 > Nav2 > Nav1 > DetailScreen</Text>
     <Button
       title="Goto Next Screen"
-      onPress={() => navigation.navigate('Detail')}
+      onPress={() => navigation.navigate('Tab2DetailScreen')}
     />
   </Detail>
 );
@@ -113,7 +113,7 @@ const Tab2Nav2Screen = ({navigation}) => (
     <Text>Tab2 > Nav2 > DetailScreen</Text>
     <Button
       title="Goto Next Screen"
-      onPress={() => navigation.navigate('Tab2Nav1Screen')}
+      onPress={() => navigation.navigate('Tab2Nav2DetailsTopNavScreen')}
     />
   </Detail>
 );
@@ -133,7 +133,7 @@ const Tab2Nav4Screen = () => (
 const HeaderLeftImage = props => (
   <Image
     source={require('./backImage.png')}
-    style={{height: 26, width: 26, marginLeft: 16, ...props.style}}
+    style={{height: 26, width: 26, marginHorizontal: 16, ...props.style}}
   />
 );
 
@@ -154,28 +154,27 @@ const SafeAreaMaterialTopTabBar = props => {
   );
 };
 
+const SafeAreaMaterialTopTabBarWithBack = props => {
+  return (
+    <SafeAreaView
+      style={{
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderBottomColor: 'lightgray',
+        alignItems: 'center',
+        backgroundColor: 'white',
+      }}>
+      <HeaderLeft navigation={props.navigation} />
+      <MaterialTopTabBar
+        {...props}
+        style={{flex: 1, backgroundColor: 'transparent'}}
+      />
+    </SafeAreaView>
+  );
+};
+
 const Tab2Nav2DetailsTopNavScreens = createMaterialTopTabNavigator(
   {
-    back: {
-      screen: () => null,
-      navigationOptions: ({navigation}) => {
-        return {
-          // tabBarComponent: <HeaderLeft navigation={navigation} />,
-
-          tabBarLabel: <HeaderLeftImage style={{marginLeft: 0}} />,
-          tabBarOnPress: () => navigation.navigate('TabScreen'),
-          // Below options not working... :(
-          // tabBarOptions: {
-          //   labelStyle: {
-          //     textAlign: 'left',
-          //   },
-          //   tabStyle: {
-          //     width: 50,
-          //   },
-          // },
-        };
-      },
-    },
     nav1: {screen: Tab2Nav2Nav1DetailScreen},
     nav2: {screen: Tab2Nav2Nav2DetailScreen},
   },
@@ -186,7 +185,7 @@ const Tab2Nav2DetailsTopNavScreens = createMaterialTopTabNavigator(
     },
     initialRouteName: 'nav1',
     swipeEnabled: true,
-    tabBarComponent: SafeAreaMaterialTopTabBar,
+    tabBarComponent: SafeAreaMaterialTopTabBarWithBack,
     tabBarOptions: {
       activeTintColor: 'black',
       inactiveTintColor: 'gray',
@@ -196,9 +195,6 @@ const Tab2Nav2DetailsTopNavScreens = createMaterialTopTabNavigator(
       indicatorStyle: {
         borderBottomColor: 'brown',
         borderBottomWidth: 2,
-      },
-      tabStyle: {
-        borderColor: 'red',
       },
       style: {
         backgroundColor: 'white',
@@ -237,56 +233,6 @@ const TopTabScreens = createMaterialTopTabNavigator(
   },
 );
 
-// const HeaderTitle = ({navigation}) => {
-//   // console.warn(navigation.state);
-//   const {routeName} = navigation.state.routes[navigation.state.index];
-//   console.warn(routeName);
-
-//   return (
-//     <View
-//       style={{
-//         flexDirection: 'row',
-//       }}>
-//       <TouchableOpacity
-//         onPress={() => {
-//           navigation.navigate('nav1');
-//         }}
-//         style={{
-//           flex: 1,
-//           alignItems: 'center',
-//           paddingVertical: 12,
-//           borderBottomWidth: routeName === 'nav1' ? 2 : 0,
-//           borderColor: 'brown',
-//         }}>
-//         <Text
-//           style={{
-//             color: routeName === 'nav1' ? 'black' : 'gray',
-//           }}>
-//           Tab1
-//         </Text>
-//       </TouchableOpacity>
-//       <TouchableOpacity
-//         onPress={() => {
-//           navigation.navigate('nav2');
-//         }}
-//         style={{
-//           flex: 1,
-//           alignItems: 'center',
-//           paddingVertical: 12,
-//           borderBottomWidth: routeName === 'nav2' ? 2 : 0,
-//           borderColor: 'brown',
-//         }}>
-//         <Text
-//           style={{
-//             color: routeName === 'nav2' ? 'black' : 'gray',
-//           }}>
-//           Tab2
-//         </Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
-
 const Tab2Stack = createStackNavigator(
   {
     TabScreen: {
@@ -295,18 +241,13 @@ const Tab2Stack = createStackNavigator(
         header: null,
       },
     },
-    Tab2Nav1Screen: {
+    Tab2Nav2DetailsTopNavScreen: {
       screen: Tab2Nav2DetailsTopNavScreens,
-      navigationOptions: ({navigation}) => {
-        return {
-          header: null,
-          // headerLeft: <HeaderLeft navigation={navigation} />,
-          // headerTitle: <HeaderTitle navigation={navigation} />,
-          // headerRight: null,
-        };
+      navigationOptions: {
+        header: null,
       },
     },
-    Detail: {
+    Tab2DetailScreen: {
       screen: Tab2DetailScreen,
       navigationOptions: ({navigation}) => {
         return {
@@ -314,7 +255,7 @@ const Tab2Stack = createStackNavigator(
         };
       },
     },
-    Detail3: {
+    Tab2Nav2FinalDetailsScreen: {
       screen: Tab2Nav2FinalDetailsScreen,
       navigationOptions: ({navigation}) => {
         return {
@@ -333,17 +274,6 @@ const Tab2Stack = createStackNavigator(
     },
   },
 );
-
-// // Hide Bottom Navigation in Nav2 screens
-// Tab2Stack.navigationOptions = ({navigation}) => {
-//   let tabBarVisible = true;
-//   if (navigation.state.index > 0) {
-//     tabBarVisible = false;
-//   }
-//   return {
-//     tabBarVisible
-//   };
-// };
 
 const Tab1Stack = createStackNavigator({
   Tab1Screen: {
